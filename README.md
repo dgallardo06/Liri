@@ -33,7 +33,7 @@ LIRI takes in 4 different commands:
 
 ## Code Snippets
 
-* `movie-this`
+#### `movie-this`
 ```
 function getMovie(){
 	var movieName = input;
