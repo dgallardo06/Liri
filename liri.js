@@ -4,6 +4,7 @@ var Twitter = require("twitter");
 var Spotify = require("node-spotify-api");
 var keys = require("./keys");
 var request = require("request");
+var fs = require("fs");
 
 var spotify = new Spotify(keys.spotify);
 var client = new Twitter(keys.twitter);
@@ -12,20 +13,20 @@ var client = new Twitter(keys.twitter);
 var command = process.argv[2];
 var input = process.argv[3];
 
-
+runApp();
 //checks user input...functions will run based on the command user entered
+function runApp(){
+	if (command === "my-tweets"){
+		getTweets();
+	} else if (command === "spotify-this-song"){
+		getSong();
+	} else if (command === "movie-this"){
+		getMovie();
+	} else if (command === "do-what-it-says"){
+		getCommand();
+	}
 
-if (command === "my-tweets"){
-	getTweets();
-} else if (command === "spotify-this-song"){
-	getSong();
-} else if (command === "movie-this"){
-	getMovie();
-} else if (command === "do-what-it-says"){
-	getCommand();
 }
-
-
 
 
 
@@ -79,7 +80,16 @@ function getMovie(){
 
 //takes text in random.txt and uses it to call one of the LIRI commands
 function getCommand(){
-	
+	console.log("getCommand ran");
+	fs.readFile("random.txt", "utf8", function(error, data) {
+	        if (error) {
+	            console.log(error);
+	        }else {
+	            var dataArr = data.split(",");
+	            var command = dataArr[0];
+	            var input = dataArr[1];
+	        }
+	    });
 }
 
 
