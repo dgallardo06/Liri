@@ -9,21 +9,21 @@ var spotify = new Spotify(keys.spotify);
 var client = new Twitter(keys.twitter);
 
 //takes in users input from command line
-var input = process.argv[2];
-var movieName = process.argv[3];
+var command = process.argv[2];
+var input = process.argv[3];
 
 
 //checks user input...functions will run based on the command user entered
 
-if (input === "my-tweets"){
+if (command === "my-tweets"){
 	getTweets();
-/*} else if (input === "spotify-this-song"){
-	spotifySong();*/
-} else if (input === "movie-this"){
-	movie();
-} /*else if (input === "do-what-it-says"){
-
-}*/
+} else if (command === "spotify-this-song"){
+	getSong();
+} else if (command === "movie-this"){
+	getMovie();
+} else if (command === "do-what-it-says"){
+	getCommand();
+}
 
 
 
@@ -44,10 +44,21 @@ function getTweets(){
 	});
 }
 
+//takes song from user input and searches artist,song name, link of song, album
+function getSong(){
+	spotify.search({ type: 'track', query: input }, function(err, data) {
+	  if (err) {
+	    return console.log('Error occurred: ' + err);
+	  }
+	 
+	console.log(data); 
+	});
+}
+
 
 //this function will fetch the movie data
-function movie(){
-
+function getMovie(){
+	var movieName = input;
 	//request url to use movieName input from user
 	var queryURL = "http://www.omdbapi.com/?t=" + movieName + "&plot=short&tomatoes=true&apikey=b9acf8b7";
 
@@ -63,6 +74,12 @@ function movie(){
 	  console.log("\nTitle: " + JSON.parse(body).Title + "\nRelease Year: " + JSON.parse(body).Year + "\nIMDB Rating: " + JSON.parse(body).imdbRating + "\nRotten Tomatoes Rating: " + JSON.parse(body).Ratings[2].Value + "\nCountry Origin: " + JSON.parse(body).Country + "\nMovie Language(s): " + JSON.parse(body).Language + "\nPlot: " + JSON.parse(body).Plot + "\nActors: " + JSON.parse(body).Actors);
 
 	});
+}
+
+
+//takes text in random.txt and uses it to call one of the LIRI commands
+function getCommand(){
+	
 }
 
 
