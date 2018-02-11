@@ -24,10 +24,10 @@ LIRI takes in 4 different commands:
 * Javascript
 * Node
 * NPM
-** Twitter
-** Spotify
-** Request
-** Dotenv
+	* Twitter
+	* Spotify
+	* Request
+	* Dotenv
 * OMDB API
 * Command Line
 
