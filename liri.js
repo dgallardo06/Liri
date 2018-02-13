@@ -13,23 +13,24 @@ var client = new Twitter(keys.twitter);
 var command = process.argv[2];
 var input = process.argv[3];
 
-runApp();
 //checks user input...functions will run based on the command user entered
-function runApp(){
-	if (command === "my-tweets"){
+
+switch (command) {
+	case "my-tweets":
 		getTweets();
-	} else if (command === "spotify-this-song"){
+		break;
+	case "spotify-this-song":
 		getSong();
-	} else if (command === "movie-this"){
+		break;
+	case "movie-this":
 		getMovie();
-	} else if (command === "do-what-it-says"){
+		break;
+	case "do-what-it-says":
 		getCommand();
-	}
-
+		break;
+	default:
+		console.log("An error occured");
 }
-
-
-
 
 
 /*-----------------------------------FUNCTIONS---------------------------------------------------*/
@@ -46,19 +47,18 @@ function getTweets(){
 }
 
 //takes song from user input and searches artist,song name, link of song, album
-function getSong(){
+function getSong(input){
 	spotify.search({ type: 'track', query: input }, function(err, data) {
 	  if (err) {
 	    return console.log('Error occurred: ' + err);
 	  }
-	 
 	console.log(data); 
 	});
 }
 
 
 //this function will fetch the movie data
-function getMovie(){
+function getMovie(input){
 	var movieName = input;
 	//request url to use movieName input from user
 	var queryURL = "http://www.omdbapi.com/?t=" + movieName + "&plot=short&tomatoes=true&apikey=b9acf8b7";
@@ -85,9 +85,23 @@ function getCommand(){
 	        if (error) {
 	            console.log(error);
 	        }else {
+	        	//takes the text in random.txt file and splits it where there is a comma and puts the strings into an array
 	            var dataArr = data.split(",");
 	            var command = dataArr[0];
 	            var input = dataArr[1];
+	            console.log(command + input);
+	            switch (command) {
+	            	case "my-tweets":
+	            		getTweets();
+	            		break;
+	            	case "spotify-this-song":
+	            		getSong(input);
+	            		break;
+	            	case "movie-this":
+	            		getMovie(input);
+	            		break;
+	            	}
+	            
 	        }
 	    });
 }
