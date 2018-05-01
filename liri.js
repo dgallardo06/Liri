@@ -1,3 +1,5 @@
+import { start } from "repl";
+
 require("dotenv").config();
 
 var Twitter = require("twitter");
@@ -13,23 +15,31 @@ var client = new Twitter(keys.twitter);
 var command = process.argv[2];
 var input = process.argv[3];
 
-//checks user input...functions will run based on the command user entered
+//Start Liri to accept a command
+startLiri(command, input);
 
-switch (command) {
-	case "my-tweets":
-		getTweets();
-		break;
-	case "spotify-this-song":
-		getSong();
-		break;
-	case "movie-this":
-		getMovie();
-		break;
-	case "do-what-it-says":
-		getCommand();
-		break;
-	default:
-		console.log("An error occured");
+//checks user input...functions will run based on the command user entered
+function whichCommand(caseData, functionData){
+	switch (caseData) {
+		case "my-tweets":
+			getTweets();
+			break;
+		case "spotify-this-song":
+			getSong(functionData);
+			break;
+		case "movie-this":
+			getMovie(functionData);
+			break;
+		case "do-what-it-says":
+			getCommand();
+			break;
+		default:
+			console.log("Sorry, I don't recognize that. Enter one of the following commands: my-tweets, spotify-this-song, movie-this or do-what-it-says");
+	}
+}
+
+function startLiri(command, input){
+	whichCommand(command,input);
 }
 
 
@@ -38,21 +48,40 @@ switch (command) {
 
 //this function fetches last 20 tweets
 function getTweets(){
-	var params = {screen_name: 'greenSupes691'};
+	var params = {
+		screen_name: "greenSupes691"
+	};
 	client.get('statuses/user_timeline', params, function(error, tweets, response) {
 	  if (!error) {
-	    console.log(tweets);
+			for (var i =0; i < tweets.length; i++){
+				console.log(tweets[i].created_at);
+				console.log("");
+				console.log(tweets[i].text);
+			}
 	  }
 	});
 }
 
 //takes song from user input and searches artist,song name, link of song, album
 function getSong(input){
-	spotify.search({ type: 'track', query: input }, function(err, data) {
+	spotify.search({
+		type: 'track',
+		query: input
+	},
+	function(err, data) {
 	  if (err) {
 	    return console.log('Error occurred: ' + err);
 	  }
-	console.log(data); 
+		var songs = data.tracks.items;
+
+		for (var i = 0; i < songs.length; i++) {
+			console.log(i);
+			console.log("artist(s): " + songs[i].artists.map(getArtistNames));
+			console.log("song name: " + songs[i].name);
+			console.log("preview song: " + songs[i].preview_url);
+			console.log("album: " + songs[i].album.name);
+			console.log("-----------------------------------");
+		}
 	});
 }
 
@@ -80,7 +109,6 @@ function getMovie(input){
 
 //takes text in random.txt and uses it to call one of the LIRI commands
 function getCommand(){
-	console.log("getCommand ran");
 	fs.readFile("random.txt", "utf8", function(error, data) {
 	        if (error) {
 	            console.log(error);
@@ -89,19 +117,13 @@ function getCommand(){
 	            var dataArr = data.split(",");
 	            var command = dataArr[0];
 	            var input = dataArr[1];
-	            console.log(command + input);
-	            switch (command) {
-	            	case "my-tweets":
-	            		getTweets();
-	            		break;
-	            	case "spotify-this-song":
-	            		getSong(input);
-	            		break;
-	            	case "movie-this":
-	            		getMovie(input);
-	            		break;
-	            	}
-	            
+							console.log(command + input);
+							
+							if(dataArr.length === 2){
+								startLiri(command, input);
+							} else if (dataArr.length ==1){
+								startLiri(command);
+							}	            
 	        }
 	    });
 }

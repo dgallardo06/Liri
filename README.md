@@ -33,6 +33,17 @@ LIRI takes in 4 different commands:
 
 ## Code Snippets
 
+#### Start Liri
+```
+//takes in users input from command line
+var command = process.argv[2];
+var input = process.argv[3];
+
+//Start Liri to accept a command
+startLiri(command, input);
+
+```
+
 #### `movie-this`
 ```
 function getMovie(){
