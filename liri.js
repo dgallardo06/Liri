@@ -1,4 +1,4 @@
-import { start } from "repl";
+//import { start } from "repl";
 
 require("dotenv").config();
 
@@ -61,6 +61,12 @@ function getTweets(){
 	  }
 	});
 }
+
+
+// Writes to the log.txt file
+var getArtistNames = function(artist) {
+  return artist.name;
+};
 
 //takes song from user input and searches artist,song name, link of song, album
 function getSong(input){
